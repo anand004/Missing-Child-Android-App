@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Report Missing Person</string>
+    <string name="capture_image">Capture Image</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="we_have_sent_you_an_otp_n_for_phone_number_verification">We have sent you an OTP \n for phone number verification</string>
+    <string name="enter_otp">Enter OTP</string>
+</resources>

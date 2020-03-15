@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "431915775429",
+    "firebase_url": "https://missingchild-e630d.firebaseio.com",
+    "project_id": "missingchild-e630d",
+    "storage_bucket": "missingchild-e630d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431915775429:android:cdc239197f8c6eb80b07ac",
+        "android_client_info": {
+          "package_name": "com.example.missingchild"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431915775429-u6tj95iv01g3dhe1bi5nlapjes1houvu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFXy2K4zWeHUx9svNLuVGWrx3PV2YNkMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431915775429-u6tj95iv01g3dhe1bi5nlapjes1houvu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
