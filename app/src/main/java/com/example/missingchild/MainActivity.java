@@ -24,6 +24,7 @@ import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,7 +41,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -61,14 +65,22 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mImageThumb;
     private Button mUploadButton;
 
+    private Button mSaveButton;
+
     String pathToFile;
+
+    Location location;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
     int PERMISSION_ID = 44;
 
+    DatabaseReference mDatabase;
+    String imageString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -80,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
         mUploadButton = findViewById(R.id.upload_image);
         mImageThumb = findViewById(R.id.image_thumbnail);
+
+        mSaveButton = findViewById(R.id.save_database);
 
         mUploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +117,24 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
+        });
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(imageString==null){
+                    Toast.makeText(MainActivity.this, "Please Capture an image first",Toast.LENGTH_LONG).show();
+
+                }
+                else {
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    mDatabase.child("user").child("manual_upload").child("case3").child("image").setValue(imageString);
+                    String Location = location.getLatitude()+","+location.getLongitude();
+                    mDatabase.child("user").child("manual_upload").child("case3").child("location").setValue(Location);
+                    Toast.makeText(MainActivity.this, "Details Saved Successfully",Toast.LENGTH_LONG).show();
+                }
+
+            }
         });
 
 
@@ -149,6 +181,12 @@ public class MainActivity extends AppCompatActivity {
                 Matrix matrix = new Matrix();
                 matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
                 Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                rotatedBitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+                byte[] imageBytes = baos.toByteArray();
+                imageString = Base64.encodeToString(imageBytes,Base64.DEFAULT);
+                imageString = "b'".concat(imageString);
+                Log.i("ByeArry","Image String is"+imageString);
                 mImageThumb.setImageBitmap(rotatedBitmap);
             }
         }
@@ -174,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                         new OnCompleteListener<Location>() {
                             @Override
                             public void onComplete(@NonNull Task<Location> task) {
-                                Location location = task.getResult();
+                                location = task.getResult();
                                 if (location == null) {
                                     requestNewLocationData();
                                 } else {
