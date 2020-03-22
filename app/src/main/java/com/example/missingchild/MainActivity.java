@@ -41,8 +41,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mUploadButton;
 
     private Button mSaveButton;
+
+    long counter = 0;
 
     String pathToFile;
 
@@ -128,9 +134,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     mDatabase = FirebaseDatabase.getInstance().getReference();
-                    mDatabase.child("user").child("manual_upload").child("case3").child("image").setValue(imageString);
+                    mDatabase.child("user").child("manual_upload").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            counter = dataSnapshot.getChildrenCount();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    counter++;
+                    String countValue = "case".concat(String.valueOf(counter));
+                    Long tsLong = System.currentTimeMillis()/1000;
+                    String ts = tsLong.toString();
+                    Log.d("Count",String.valueOf(counter));
+                    mDatabase.child("user").child("manual_upload").child(ts).child("image").setValue(imageString);
                     String Location = location.getLatitude()+","+location.getLongitude();
-                    mDatabase.child("user").child("manual_upload").child("case3").child("location").setValue(Location);
+                    mDatabase.child("user").child("manual_upload").child(ts).child("location").setValue(Location);
                     Toast.makeText(MainActivity.this, "Details Saved Successfully",Toast.LENGTH_LONG).show();
                 }
 

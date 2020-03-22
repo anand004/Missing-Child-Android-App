@@ -61,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                 String phoneNumber = mPhoneNumber.getText().toString();
                 String completePhoneNumber = "+".concat(countryCode).concat(phoneNumber);
 
-                Toast.makeText(LoginActivity.this, "Phone Number : " + completePhoneNumber,Toast.LENGTH_LONG).show();
 
                 if(countryCode.isEmpty() || phoneNumber.isEmpty()){
                     mLoginFeedbackText.setText("Please Fill in the form to continue");
